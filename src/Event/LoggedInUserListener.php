@@ -37,6 +37,10 @@ class LoggedInUserListener implements EventListenerInterface {
 			'Model.beforeSave' => [
 				'callable' => 'beforeSave',
 				'priority' => -100
+			],
+			'Model.beforeDelete' => [
+				'callable' => 'beforeDelete',
+				'priority' => -100
 			]
 		];
 	}
@@ -50,6 +54,12 @@ class LoggedInUserListener implements EventListenerInterface {
  * @return void
  */
 	public function beforeSave(Event $event, Entity $entity, ArrayObject $options) {
+		if (empty($options['loggedInUser'])) {
+			$options['loggedInUser'] = $this->_Auth->user('id');
+		}
+	}
+
+	public function beforeDelete(Event $event, Entity $entity, ArrayObject $options) {
 		if (empty($options['loggedInUser'])) {
 			$options['loggedInUser'] = $this->_Auth->user('id');
 		}
